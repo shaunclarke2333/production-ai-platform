@@ -2,13 +2,23 @@
 # See https://pre-commit.com/hooks.html for more hooks
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.2.0
+    rev: v6.0.0
     hooks:
     -   id: trailing-whitespace
     -   id: end-of-file-fixer
     -   id: check-yaml
     -   id: check-added-large-files
     -   id: check-merge-conflict
+
+-   repo: https://github.com/astral-sh/ruff-pre-commit
+    # Ruff version.
+    rev: v0.15.20
+    hooks:
     -   id: ruff-check # Runs python linter
     -   id: ruff-format # Runs python formatter
-    -   id: terraform-fmt # Runs terraform formatter
+
+-  repo: https://github.com/antonbabenko/pre-commit-terraform
+   # version of pre-commit-terraform
+   rev: v1.107.0
+   hooks:
+    -   id: terraform_fmt # Runs terraform formatter
