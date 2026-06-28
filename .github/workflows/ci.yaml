@@ -1,0 +1,31 @@
+name: CI
+on:
+  pull_request:
+    paths: [ "infra/terraform/**" ]
+
+# Starting with no permissions and only scope what is needed for each job.
+permissions: {}
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      # using hashes for actions to avoid supply chain attacks.
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+      - name: Format check
+        run: terraform fmt -check -recursive
+        working-directory: infra/terraform
+      - name: Validate
+        # Using -backend=false to avoid writing any state files to disk.
+        # Does not need access remote state or need AWS credentials.
+        # This is a security best practice for CI/CD pipelines.
+        run: |
+          terraform init -backend=false
+          terraform validate
+        working-directory: infra/terraform/bootstrap
+
+        
