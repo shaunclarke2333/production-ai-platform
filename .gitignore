@@ -329,6 +329,9 @@ crash.*.log
 *.tfvars
 *.tfvars.json
 
+# Allowing non sensistive tfvars file so that remtote state bootstrap is reproducible.
+!global.auto.tfvars
+
 # Ignore override files as they are usually used to override resources locally and so
 # are not checked in
 override.tf
