@@ -11,5 +11,5 @@ module "production_ai_platform_ecr" {
 
 # Returning the ECR repo URL as an output
 output "repository_url" {
-  value = module.production_ai_platform_ecr.repository_url
+    value = module.production_ai_platform_ecr.repository_url
 }
