@@ -1,8 +1,8 @@
-# Remote state backend config for the entire project
+# Remote state backend config for ecr module
 terraform {
   backend "s3" {
     bucket = "prod-ai-platform-terraform-state"
-    key    = "bootstrap/terraform.tfstate"
+    key    = "shared/terraform.tfstate"
     region = "us-west-2"
 
     # Enabling native S3 state locking

@@ -1,5 +1,5 @@
 # The purpose of the codeowners file is to automate code reviews
 # by assigning responsibility for specific files and directories in a repo.
-# When a PR is opened, github automatically requests reviews from whoever 
+# When a PR is opened, github automatically requests reviews from whoever
 # is listed in the file.
 * @shaunclarke2333
