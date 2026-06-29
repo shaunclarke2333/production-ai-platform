@@ -27,5 +27,3 @@ jobs:
           terraform init -backend=false
           terraform validate
         working-directory: infra/terraform/bootstrap
-
-        
