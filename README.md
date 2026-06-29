@@ -1,2 +1,40 @@
 # production-ai-platform
-A production grade AI agent and RAG platform, built and deployed end to end on AWS with Terraform, EKS, GitOps (ArgoCD), FastAPI, and the Anthropic API. Full observability and evaluation.
+
+End-to-end AI agent and RAG platform on AWS: Terraform, EKS, ArgoCD, FastAPI, Anthropic API, with observability and evals.
+
+## Architecture
+
+```mermaid
+---
+title: Present Architecture
+---
+flowchart LR
+    subgraph AWS
+        direction TB
+        S3[(State Bucket)]
+        ECR[ECR Repo]
+    end
+    subgraph GitHub[GitHub]
+        direction LR
+        PR[Pull Request] --triggers--> GHA[GitHub Actions: fmt and validate]
+    
+    end
+    Dev[Local Machine: Terraform] --remote state--> S3
+    Dev[Local Machine: Terraform] --deploy from local machine--> AWS
+    Dev[Local Machine: Terraform] -->|opens PR| PR
+    
+```
+
+## Stack
+- Infrastructure: Terraform, AWS (S3, ECR, EKS)
+- Delivery: GitHub Actions, ArgoCD
+- App: FastAPI (Python)
+- AI: Anthropic API (direct)
+- Observability: Prometheus, Grafana
+
+## Running locally
+_Will fill in once there is an app to run._
+
+## Phase log
+- 2026-07-26  Bootstrap: remote state backend on S3 with native lockfile locking.
+- 2026-07-27  Shared: single ECR repository, promoted across envs by SHA tag.
