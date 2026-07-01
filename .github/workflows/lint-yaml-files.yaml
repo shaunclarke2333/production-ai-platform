@@ -1,0 +1,25 @@
+# name: Validate YAML
+
+# on:
+#   push:
+#     branches: [main]
+#   pull_request:
+#     branches: [main]
+
+# jobs:
+#   validate-yaml:
+#     runs-on: ubuntu-latest
+#     permissions:
+#       contents: read
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+#       - name: Run YAML Linter
+#         uses: kustomize-everything/action-yaml-linter@89cbe2e8b4627f0e79eabda42e451fbef48111fc
+#         with:
+#           # Not specifying a path and poiting to the repo root dir so it will lint all yaml files int the repo.
+#           file_or_dir: '.'
+#           # Setting strict to true so the linter will fail on warnings and errors.
+#           strict: true

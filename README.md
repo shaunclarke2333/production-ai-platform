@@ -36,5 +36,7 @@ flowchart LR
 _Will fill in once there is an app to run._
 
 ## Phase log
-- 2026-07-26  Bootstrap: remote state backend on S3 with native lockfile locking.
-- 2026-07-27  Shared: single ECR repository, promoted across envs by SHA tag.
+- 06-26-2026  Bootstrap: remote state backend on S3 with native lockfile locking.
+- 06-27-2026  Shared: single ECR repository, promoted across envs by SHA tag.
+- 06-27-2026  Shared: OIDC provider that allows GHA aws access.
+- 06-30-2026  .github/workflows: GHA CI workflow, builds and pushes to ECR
