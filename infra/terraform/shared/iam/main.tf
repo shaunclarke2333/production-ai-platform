@@ -1,23 +1,23 @@
 # IAM OIDC resource that gives GitHub Actions the ability to assume roles in AWS so the CICD pipeline can deploy to AWS.
 resource "aws_iam_openid_connect_provider" "github_actions" {
-    url = "https://token.actions.githubusercontent.com"
-    client_id_list = ["sts.amazonaws.com"]
+  url            = "https://token.actions.githubusercontent.com"
+  client_id_list = ["sts.amazonaws.com"]
 
-    # The thumbprint is no longer required and can also be left blank
-    thumbprint_list = ["6938fd4d98bab03faadb97b34396831e3780aea1"]
+  # The thumbprint is no longer required and can also be left blank
+  thumbprint_list = ["6938fd4d98bab03faadb97b34396831e3780aea1"]
 
-    tags = {
-        "Environment" = "Shared"
-        "Project"     = "Production AI Platform"
-        "Name"        = "production-ai-platform-github-actions"
-    }
+  tags = {
+    "Environment" = "Shared"
+    "Project"     = "Production AI Platform"
+    "Name"        = "production-ai-platform-github-actions"
+  }
 }
 
 # Policy that will be attached to the ci_deploy role to allow GHA to assume roles in AWS.
 resource "aws_iam_policy" "ci_ecr_push" {
-    name = "production-ai-platform-ci-ecr-push"
+  name = "production-ai-platform-ci-ecr-push"
 
-    policy = jsonencode({
+  policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
@@ -46,7 +46,7 @@ resource "aws_iam_policy" "ci_ecr_push" {
     "Project"     = "Production AI Platform"
     "Name"        = "production-ai-platform-ci-ecr-push"
   }
-  
+
 }
 
 # Role that will be assumed by GHA to allow it to make changes in AWS.
@@ -84,7 +84,6 @@ resource "aws_iam_role" "ci_deploy" {
 
 # Attaching the policy to the role
 resource "aws_iam_role_policy_attachment" "ci_deploy" {
-    role = aws_iam_role.ci_deploy.name
-    policy_arn = aws_iam_policy.ci_ecr_push.arn
+  role       = aws_iam_role.ci_deploy.name
+  policy_arn = aws_iam_policy.ci_ecr_push.arn
 }
-
