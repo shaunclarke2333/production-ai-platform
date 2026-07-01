@@ -1,2 +1,3 @@
-FROM nginx:1.32-alpine
+FROM nginx:1.28-alpine
+
 RUN echo "production-ai-platform placeholder" > /usr/share/nginx/html/index.html
