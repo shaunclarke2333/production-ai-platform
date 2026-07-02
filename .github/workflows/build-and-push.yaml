@@ -1,10 +1,15 @@
 # Workflow name
 name: CI build and push
 
+# On pull request, the build portion of this workflow will run.
+# On push to main this workflow will push the built image to ECR.
+# This split will allow the image ot be build and tested on PRs without pushing to ECR, which is only done on main.
 on:
+  pull_request:
+    paths: ["placeholder/**"]
   push:
-    branches:
-      - main
+    branches: ["main"]
+    paths: ["placeholder/**"]
 
 # Environment variables:
 env:
@@ -32,12 +37,16 @@ jobs:
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Configure AWS credentials
+        # This condition prevents the workflow from failing on PRs, since the role to assume is only available on the main branch.
+        if: github.event_name == 'push'
         uses: aws-actions/configure-aws-credentials@254c19bd240aabef8777f48595e9d2d7b972184b # v6.2.1
         with:
           role-to-assume: ${{ env.CI_DEPLOY_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
+        # This condition prevents the ECR login from failing on PRs. AWS role to assume is only available on main branch
+        if: github.event_name == 'push'
         id: login-ecr # This is a step ID that allows me to reference the output of this step later
         uses: aws-actions/amazon-ecr-login@d539f0932e70871a027e9d5a9d8fc38589180a64 # v2.1.6
 
@@ -45,12 +54,28 @@ jobs:
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@d7f5e7f509e45cec5c76c4d5afdd7de93d0b3df5 # v4.1.0
 
-      - name: Build and Push Image
+      # PRs: Build only on PRs to validate that he Dockerfile is valid and can be built. only gets local tag
+      - name: Build Image (PR)
+        # This condition allows this build to run only on PRs.
+        if: github.event_name == 'pull_request'
         # This action is used with buildx to build and push docker images.
         uses: docker/build-push-action@f9f3042f7e2789586610d6e8b85c8f03e5195baf # v7.2.0
         with:
           context: . # Specifying the root directory for the build.
           file: ./placeholder/Dockerfile # specifying the path to the Dockerfile to use for the build.
-          push: true # push the image tot he registry after building.
+          push: false
+          tags:  |
+            placeholder:${{ env.TAG }}
+      
+      # main branch: Build and push the real SHA tagged image to ECR on push to main.
+      - name: Build and Push Image (main)
+        # This condition prevents the build and push from failing on PRs.
+        if: github.event_name == 'push'
+        # This action is used with buildx to build and push docker images.
+        uses: docker/build-push-action@f9f3042f7e2789586610d6e8b85c8f03e5195baf # v7.2.0
+        with:
+          context: . # Specifying the root directory for the build.
+          file: ./placeholder/Dockerfile # specifying the path to the Dockerfile to use for the build.
+          push: true
           tags:  |
             ${{ steps.login-ecr.outputs.registry }}/${{ env.AWS_REPO_NAME }}:${{ env.TAG }}
