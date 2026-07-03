@@ -66,7 +66,7 @@ jobs:
           push: false
           tags:  |
             placeholder:${{ env.TAG }}
-      
+
       # main branch: Build and push the real SHA tagged image to ECR on push to main.
       - name: Build and Push Image (main)
         # This condition prevents the build and push from failing on PRs.
