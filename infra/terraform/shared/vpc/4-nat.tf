@@ -21,4 +21,3 @@ resource "aws_nat_gateway" "nat" {
   depends_on = [aws_internet_gateway.igw, aws_subnet.public_zone1, aws_eip.nat]
 
 }
-
