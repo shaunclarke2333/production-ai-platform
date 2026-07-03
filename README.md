@@ -40,3 +40,4 @@ _Will fill in once there is an app to run._
 - 06-27-2026  Shared: single ECR repository, promoted across envs by SHA tag.
 - 06-27-2026  Shared: OIDC provider that allows GHA aws access.
 - 06-30-2026  .github/workflows: GHA CI workflow, builds and pushes to ECR
+- 07-02-2026  Shared: VPC, IGW, subnets, NAT, rt tables
