@@ -100,9 +100,9 @@ resource "aws_eks_node_group" "general" {
   # This is useful for updates that are made outside of Terraform
   # such as changes to the node group configuration or scaling settings.
   # Whem the desired size of the node group is updated outside of Terraform by the auto scaler, this block will prevent Terraform from trying to revert the change back to the original desired size during the next plan or apply.
-  lifecycle {
-    ignore_changes = [scaling_config[0].desired_size]
-  }
+  # lifecycle {
+  #   ignore_changes = [scaling_config[0].desired_size]
+  # }
 
   tags = {
     Name = "${var.tags["Name"]}-${var.tags["Environment"]}-eks-nodes"

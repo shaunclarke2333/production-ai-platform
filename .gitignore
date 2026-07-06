@@ -351,4 +351,6 @@ terraform.rc
 
 # my notes.
 foundation.md
+# quick commands i reuse
+quick_commands.md
 # End of https://www.toptal.com/developers/gitignore/api/python,terraform,node
