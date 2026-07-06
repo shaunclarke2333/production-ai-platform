@@ -1,0 +1,4 @@
+# Turning off TLS on Argocd because it will be handled by the AWS load balancer
+configs:
+  params:
+    server.insecure: true
