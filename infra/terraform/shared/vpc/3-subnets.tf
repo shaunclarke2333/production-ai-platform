@@ -47,7 +47,7 @@ resource "aws_subnet" "public_zone1" {
     Environment = var.tags["Environment"]
     Project     = var.tags["Project"]
     # Eks uses this tag to identify which subnets to create public load balancers
-    "kubernetes.io/role/elb"                                    = "1"
+    "kubernetes.io/role/elb"                                = "1"
     "kubernetes.io/cluster/${var.tags["Name"]}-eks-cluster" = "owned"
   }
 
@@ -66,7 +66,7 @@ resource "aws_subnet" "public_zone2" {
     Environment = var.tags["Environment"]
     Project     = var.tags["Project"]
     # Eks uses this tag to identify which subnets to create public load balancers
-    "kubernetes.io/role/elb"                                    = "1"
+    "kubernetes.io/role/elb"                                = "1"
     "kubernetes.io/cluster/${var.tags["Name"]}-eks-cluster" = "owned"
   }
 
