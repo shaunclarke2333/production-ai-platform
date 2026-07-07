@@ -1,0 +1,46 @@
+# Eery app will need a yaml file like this.
+# It is like a deloyment recipe for an application.
+# the argocd application that tells argocd what to deploy and where to find what it needs to deploy
+# also where to deploy it to.
+
+# When this is deployed on the kubernetes cluster, this allows argocd to
+# compare whats stored in git and whats running on the cluster.
+# If theres any difference between the two, argocd syncs whats on the cluster back to the git version.
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  # This creates an ArgoCD application named placeholder inside the argocd namespace.
+  name: placeholder
+  namespace: argocd
+spec:
+  # Applications belong to an ArgoCD Project.
+  # Projects control things like:
+  #  Which Git repositories are allowed
+  #  Which clusters can be deployed to
+  #  Which namespaces are allowed
+  #  RBAC permissions
+  # Most environments start with the default project.
+  project: default
+  # Source tells ArgoCD where the manifests live.
+  # source can also point to a helm chart or kustomize directory
+  source:
+    repoURL: https://github.com/shaunclarke2333/production-ai-platform
+    # ArgoCD will deploy everything in the path below.
+    path: deploy/manifests
+    targetRevision: main
+  # Destination tells argocd where to deploy the files in source to
+  # like deploy to this cluster in so and so namesapce
+  # If we end up having multiple clusters in argocd
+  # the "server" field identifies which one to deploy to.
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dev
+  # Syncpolicy is where you can configure argocd under the automated section to automatically deploy
+  # changes it picks up in git.
+  # selfheal: true means if the deployment was deleted on the cluster
+  # argocd noticies it nolonger exists and recreates it automatically.
+  # prune: true allows argocd to remove a manifest from the cluster if it no longer exists in teh repo.
+  syncPolicy:
+    automated: { prune: true, selfHeal: true }
+    syncOptions: [CreateNamespace=true]
