@@ -18,8 +18,8 @@ resource "aws_iam_role" "nodes" {
 
   tags = {
     "Environment" = var.tags["Environment"]
-    "Project" = var.tags["Project"]
-    "Name" = "${var.tags["Name"]}-${var.tags["Environment"]}"
+    "Project"     = var.tags["Project"]
+    "Name"        = "${var.tags["Name"]}-${var.tags["Environment"]}"
   }
 
 }

@@ -3,7 +3,7 @@
 # # create a group
 # # add the user to the group
 # # create a role with a trust relationship that allows the user to assume the role
-# # create a policy that allows the user to assume the role 
+# # create a policy that allows the user to assume the role
 # # attach the assume role policy to the group
 # # create an AWS side policy that allows the user to discover and connect to the EKS cluster
 # # attach the AWS side policy to the group and the role
@@ -37,7 +37,7 @@
 # #   --profile eks-developer
 
 
-# # Data source for caller identity to get the current account id. This is used in the trust relationship of the iam role to allow the user to assume the role. 
+# # Data source for caller identity to get the current account id. This is used in the trust relationship of the iam role to allow the user to assume the role.
 # data "aws_caller_identity" "current" {}
 
 # # Creating an IAM group for developers
@@ -154,4 +154,3 @@
 #   kubernetes_groups = ["viewer-group"]
 
 # }
-
