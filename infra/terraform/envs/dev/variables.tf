@@ -15,26 +15,25 @@ variable "vpc_state_key" {
 
 variable "eks_version" {
   description = "The version of EKS the cluster will use"
-  type = string
+  type        = string
 }
 
 variable "tags" {
   description = "EKS cluster environment tags"
-  type = map(string)
+  type        = map(string)
 }
 
 variable "node_group_name" {
   description = "The name of the node group"
-  
+
 }
 
 variable "general_nodes_ec2_types" {
   description = "The size of the EC2 instances for the cluster"
-  type = list(string) 
+  type        = list(string)
 }
 
 variable "general_nodes_count" {
   description = "The number of nodes to be available at any given time"
-  type = string
+  type        = string
 }
-

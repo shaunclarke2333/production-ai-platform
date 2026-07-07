@@ -77,7 +77,7 @@
 #     namespace = "kube-system"
 #     service_account = "cluster-autoscaler"
 #     role_arn = aws_iam_role.cluster_autoscaler.arn
-  
+
 # }
 
 # # Using the helm provider to deploy the cluster autoscaler
@@ -89,7 +89,7 @@
 #     version = "9.37.0"
 
 #     set = [
-        
+
 #         {
 #             name =  "rbac.serviceAccount.name"
 #             value = "cluster-autoscaler"

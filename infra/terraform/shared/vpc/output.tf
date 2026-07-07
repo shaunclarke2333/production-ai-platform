@@ -12,4 +12,3 @@ output "public_subnet_ids" {
   description = "IDs for public subnets"
   value       = [aws_subnet.public_zone1.id, aws_subnet.public_zone2.id]
 }
-

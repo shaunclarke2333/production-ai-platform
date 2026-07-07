@@ -11,6 +11,9 @@ on:
     branches: ["main"]
     paths: ["placeholder/**"]
 
+# Startting with no permissions and only scope what is needed for each job.
+permissions: {}
+
 # Environment variables:
 env:
   # The aws region:
@@ -22,9 +25,6 @@ env:
   # Image tag
   TAG: ${{ github.sha }}
 
-# Startting with no permissions and only scope what is needed for each job.
-permissions: {}
-
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -35,6 +35,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          # This prevents the checkout token from being written to disk, and is recommended for security purposes.
+          persistent-credentials: false
 
       - name: Configure AWS credentials
         # This condition prevents the workflow from failing on PRs, since the role to assume is only available on the main branch.

@@ -10,16 +10,16 @@ terraform {
     }
 
     helm = {
-      source = "hashicorp/helm"
+      source  = "hashicorp/helm"
       version = "~> 3.2.0"
     }
-    
+
   }
 }
 
 provider "aws" {
   region = var.region
-  
+
 }
 
 # Resource block that initilizes helm
@@ -30,4 +30,3 @@ provider "helm" {
     token                  = data.aws_eks_cluster_auth.eks.token
   }
 }
-
