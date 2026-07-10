@@ -1,4 +1,4 @@
-# shared/vpc: VPC  
+# shared/vpc: VPC
 
 The isolated network space in AWS where the infrastructure will run.
 

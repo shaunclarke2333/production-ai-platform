@@ -12,7 +12,7 @@ The hand rolled Kubernetes cluster the platform runs on
 
 ## Inputs/Outputs
 - Inputs: region, cluster name, node group sizing(from dev.auto.tfvars)
-- Outputs: none; the cluster is accessed via kubeconfig 
+- Outputs: none; the cluster is accessed via kubeconfig
 
 ## How to apply
 ```bash
