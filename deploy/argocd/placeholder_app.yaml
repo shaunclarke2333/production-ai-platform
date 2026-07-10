@@ -7,6 +7,7 @@
 # compare whats stored in git and whats running on the cluster.
 # If theres any difference between the two, argocd syncs whats on the cluster back to the git version.
 
+
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
