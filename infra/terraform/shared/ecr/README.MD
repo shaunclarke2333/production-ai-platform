@@ -1,19 +1,23 @@
-# <component name>
+# shared/ecr: ECR
 
-<one line: what this is>
+The ECR repo that will hold the the images for the production ai platform
 
 ## Why it's built this way
-- <decision and the reason>
-- <decision and the reason>
+- Built from a module, because it's a shared resourced that can be spun up easily if another is needed.
+- Policy that expires untagged images older than 30 days. This automatically keeps the repo clean and uptodate.
+- Policy also keeps only the last 20 tagged images. 
+- Imuutable tags paired with commit-SHA tagging, so an image can never be overwritten and every deployment traces to an exact commit.
 
 ## Depends on
-- <other component this needs, e.g. shared/vpc outputs>
+- This depends on the ecr module located at modules/ecr
 
 ## Inputs / outputs
-- Inputs: <what it needs>
-- Outputs: <what it exposes for other configs to consume>
+- Inputs: ecr_repo_name, ecr_image_tag_mutability, ecr_encryption_type, ecr_image_scan_on_push, ecr_repo_tags
+- Outputs: repository_url
 
 ## How to apply
 ```bash
-<the commands>
+cd infra/terraform/shared/ecr
+terraform init
+terraform apply
 ```
