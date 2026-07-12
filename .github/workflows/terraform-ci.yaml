@@ -1,0 +1,122 @@
+# This workflow must trigger on every PR or the required checks never report at all.
+# Then we end up with a deadlock.
+# To get it to always trigger we use three jobs explained below.
+
+# The fix is three jobs:
+#   1. changes        - detects whether infra/ was actually touched
+#   2. terraform      - the real work; only runs when infra/ changed, so it CAN be skipped
+#   3. terraform-gate - always runs, inspects the terraform job's result, and reports
+#
+
+# So the idea here is, the chnages job will check if any files in the specified path changed.
+# The terraform gate job will check the terraform job result.
+# to see if it passed, failed, or did not run. If the Terraform job passed the terraform gate job passes,
+# if the terraform job fails, the terraform gate job fails, if the terraform job was skipped becasue of no changes,
+# The terraform gate job still passes.
+
+name: Terraform CI
+on:
+  pull_request:
+
+# Starting with no permissions and only scope what is needed for each job.
+permissions: {}
+
+jobs:
+  # This job detects whether this PR changed the infra directory in any way.
+  changes:
+    runs-on: ubuntu-latest
+    # Addind read permissions os we can read the repo and diff the files
+    permissions:
+      contents: read
+    # Using outputs so that this jobs publishes a value that the later jobs will use.
+    outputs:
+      # Using the word "infra" as a label to hold the output
+      infra: ${{ steps.filter.outputs.infra }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          # This prevents the checkout token from being written to disk, and is security best practice
+          persist-credentials: false
+
+      - name: Check if infra files changed
+        # The dorny-paths filter compares the files chanaged in this PR against the glob patterns below "infra/**".
+        # So for each label that is set under "filter" dorny sets the label to true or false depending on
+        # if anything in that label's path changed.
+        uses: dorny/paths-filter@7b450fff21473bca461d4b92ce414b9d0420d706 # v4.0.2
+        # Steps dont have names that we can use to reference them to use their output
+        # So if a step produces an output we will need later, we use the "id" field to tag it.
+        # and refer to it by whatever tag we added to the "id" field.
+        # so we tag this step "filter" so later we can reference steps.filter.outputs.*
+        id: filter
+        with:
+          # Using the infra label here again. Any file under infra/ counts as an infra change.
+          filters: | 
+            infra:
+              - 'infra/**'
+
+
+  terraform:
+    # This terraform job only runs if they are changes in infra/ and formats and validates terraform files.
+    needs: changes # This lets this job knows it is dependent on the changes job and cannt run before it.
+    # This logic says read the output published by the changes job in the infra label and only run if infra/ files chnaged.
+    if: needs.changes.outputs.infra == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      # using hashes for actions to avoid supply chain attacks.
+      - name: Checkout code
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          # This prevents the checkout token from being written to disk, and is security best practice
+          persist-credentials: false
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+      
+      - name: Format check
+        # fmt runs from the repo root and fails if any file is not canonically formatted.
+        # -recursive makes sure it goes through every subdirectory.
+        run: terraform fmt -check -recursive
+
+      - name: Validate
+        # init to initialize each directory that we loop through
+        # Using -backend=false so we skip configuring the s3 backed
+        # so we never try to connect and read remote state.
+        # Does not need access remote state or need AWS credentials.
+        # This is a security best practice for CI/CD pipelines.
+        # validate confirms the config is syntactically valid and internally
+        # consistent. I run it per root module since each has its own backend.
+        run: |
+          # So we want to find every directory containing .tf terraform files, and validate each one
+          find infra -name '*.tf' -exec dirname {} \; | sort -u | while read dir; do
+            echo "Validating $dir"
+            terraform -chdir="$dir" init -backend=false
+            terraform -chdir="$dir" validate
+          done
+
+  
+  terraform-gate:
+    # This job will be the required check that prevents the deadlock because it will always run
+    # and validate the output of the terraform job to determine if it passed, failed or got skipped.
+    needs: terraform # This job depends on the terraform job, because it needs its output
+    # always() ensures this job runs no matter what happened upstream with the previous jobs.
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report terraform result
+        run: |
+          # This script uses needs.terraform.result,
+          # wich holds the output from the terraform job completion state
+          # The state will be either success, failure, skipped or cancelled.
+          # This script will ONLY fail on a real failure.
+          # If we get a "skipped" which means this PR had no infra changes, that is fine.
+          if [ "${{ needs.terraform.result }}" = "failure" ]; then
+            echo "Terraform checks failed"
+            exit 1
+          fi
+          echo "Terraform checks passed or were not required for this PR"
+
+  

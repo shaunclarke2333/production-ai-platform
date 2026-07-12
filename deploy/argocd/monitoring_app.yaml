@@ -1,0 +1,48 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  # This creates an ArgoCD application named kube-prometheus-stack inside the argocd namespace.
+  name: kube-prometheus-stack
+  namespace: argocd
+spec:
+  # Applications belong to an ArgoCD Project.
+  # Projects control things like:
+  #  Which Git repositories or helm files are allowed
+  #  Which clusters can be deployed to
+  #  Which namespaces are allowed
+  #  RBAC permissions
+  # Most environments start with the default project.
+  project: default
+  # Source tells ArgoCD where the manifests live.
+  # source can also point to a helm chart or kustomize directory
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    # if "path" is specified, ArgoCD will deploy everything in the path.
+    # If "chart" is specified. ArgoCD will use the helm repo url to deploy that application.
+    chart: kube-prometheus-stack
+    # Target Revision allows you to pin a version
+    targetRevision: 87.15.1
+  # Destination tells argocd where to deploy the files in source to
+  # like deploy to this cluster in so and so namesapce
+  # If we end up having multiple clusters in argocd
+  # the "server" field identifies which one to deploy to.
+  destination:
+    server: https://kubernetes.default.svc
+    # The namesapce where the observability stack will be deployed.
+    namespace: monitoring
+  # Syncpolicy is where you can configure argocd under the automated section to automatically deploy
+  # changes it picks up in git.
+  # selfheal: true means if the deployment was deleted on the cluster
+  # argocd noticies it nolonger exists and recreates it automatically.
+  # prune: true allows argocd to remove a manifest from the cluster if it no longer exists in teh repo.
+
+  # The ServerSideApply=true options is used when charts have huge CRDS(custom resource definitions).
+  # Because ArgoCD writes the Yaml file of the resource into annotation of the resource it is creating
+  # to compare later, sometimes it does not fit because the annotation limit is 262KB.
+  # ServerSideApply=true allows the comparison to happen on the kubernetes server instead.
+  # So there is no giant anootation, no size limit and the CRDs install fine.
+  syncPolicy:
+    automated: { prune: true, selfHeal: true }
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
