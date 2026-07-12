@@ -39,7 +39,7 @@ spec:
   # The ServerSideApply=true options is used when charts have huge CRDS(custom resource definitions).
   # Because ArgoCD writes the Yaml file of the resource into annotation of the resource it is creating
   # to compare later, sometimes it does not fit because the annotation limit is 262KB.
-  # ServerSideApply=true allows the comparison to happen on the kubernetes server instead. 
+  # ServerSideApply=true allows the comparison to happen on the kubernetes server instead.
   # So there is no giant anootation, no size limit and the CRDs install fine.
   syncPolicy:
     automated: { prune: true, selfHeal: true }
