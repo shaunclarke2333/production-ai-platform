@@ -51,7 +51,7 @@ jobs:
         id: filter
         with:
           # Using the infra label here again. Any file under infra/ counts as an infra change.
-          filters: | 
+          filters: |
             infra:
               - 'infra/**'
 
@@ -75,7 +75,7 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
-      
+
       - name: Format check
         # fmt runs from the repo root and fails if any file is not canonically formatted.
         # -recursive makes sure it goes through every subdirectory.
@@ -97,7 +97,7 @@ jobs:
             terraform -chdir="$dir" validate
           done
 
-  
+
   terraform-gate:
     # This job will be the required check that prevents the deadlock because it will always run
     # and validate the output of the terraform job to determine if it passed, failed or got skipped.
@@ -118,5 +118,3 @@ jobs:
             exit 1
           fi
           echo "Terraform checks passed or were not required for this PR"
-
-  
