@@ -52,4 +52,17 @@ _Will fill in once there is an app to run._
 - 06-27-2026  Shared: OIDC provider that allows GHA aws access.
 - 06-30-2026  .github/workflows: GHA CI workflow, builds and pushes to ECR
 - 07-02-2026  Shared: VPC, IGW, subnets, NAT, rt tables
-- 07-05-2026  dev: EKS, ArgoCD, AWS-LBC, csi-driver, pod identity, metrics server
+- 07-05-2026  dev: hand-rolled EKS cluster, node group, pod identity agent, EBS CSI driver, AWS-LBC, metrics server
+- 07-05-2026  dev: ArgoCD deployed via Helm
+- 07-10-2026  deploy/: first end-to-end GitOps sync. Placeholder image built by CI,
+              pushed to ECR, deployed to the cluster by ArgoCD from git. The spine
+              is connected: code -> CI -> ECR -> git -> ArgoCD -> EKS.
+- 07-10-2026  Docs: directory-level READMEs for vpc, ecr, iam, envs/dev, deploy.
+              Architecture diagram updated to present state. Tagged v0.2.0.
+- 07-11-2026  monitoring: kube-prometheus-stack (Prometheus, Grafana, Alertmanager,
+              node-exporter, kube-state-metrics) deployed via ArgoCD Helm source.
+              Required ServerSideApply=true, the chart's CRDs exceed the 262KB
+              annotation limit that client-side apply relies on.
+- 07-11-2026  .github/workflows: Terraform CI restructured into three jobs
+              (changes / terraform / terraform-gate). The gate always runs so a
+              path filtered required check can never deadlock a PR.
