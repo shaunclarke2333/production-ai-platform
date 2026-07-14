@@ -6,7 +6,7 @@ name: CI build and push
 # This split will allow the image ot be build and tested on PRs without pushing to ECR, which is only done on main.
 on:
   pull_request:
-    paths: ["placeholder/**"]
+    paths: ["app/**"]
   push:
     branches: ["main"]
     paths: ["placeholder/**"]
@@ -64,8 +64,8 @@ jobs:
         # This action is used with buildx to build and push docker images.
         uses: docker/build-push-action@f9f3042f7e2789586610d6e8b85c8f03e5195baf # v7.2.0
         with:
-          context: . # Specifying the root directory for the build.
-          file: ./placeholder/Dockerfile # specifying the path to the Dockerfile to use for the build.
+          context: /app # Specifying the root directory for the build.
+          file: ./app/Dockerfile # specifying the path to the Dockerfile to use for the build.
           push: false
           tags:  |
             placeholder:${{ env.TAG }}
