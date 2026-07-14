@@ -9,7 +9,7 @@ on:
     paths: ["app/**"]
   push:
     branches: ["main"]
-    paths: ["placeholder/**"]
+    paths: ["app/**"]
 
 # Startting with no permissions and only scope what is needed for each job.
 permissions: {}
