@@ -12,7 +12,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   # This creates an ArgoCD application named placeholder inside the argocd namespace.
-  name: placeholder
+  name: knowledge-service
   namespace: argocd
 spec:
   # Applications belong to an ArgoCD Project.

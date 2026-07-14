@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: knowledge-service
-          image: 003729975368.dkr.ecr.us-west-2.amazonaws.com/production-ai-platform/knowledge-service:51dcd23fce625e26b7430fcd65917bc9921a0424
+          image: 003729975368.dkr.ecr.us-west-2.amazonaws.com/production-ai-platform/knowledge-service:b2d07d033a6cc90ed07477ffcc68b7ae1ec75b09
           ports:
             - containerPort: 8000
 ---
