@@ -2,32 +2,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: placeholder
+  name: knowledge-service
   namespace: dev
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: placeholder
+      app: knowledge-service
   template:
     metadata:
       labels:
-        app: placeholder
+        app: knowledge-service
     spec:
       containers:
-        - name: placeholder
+        - name: knowledge-service
           image: 003729975368.dkr.ecr.us-west-2.amazonaws.com/production-ai-platform/knowledge-service:51dcd23fce625e26b7430fcd65917bc9921a0424
           ports:
-            - containerPort: 80
+            - containerPort: 8000
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: placeholder
+  name: knowledge-service
   namespace: dev
 spec:
   selector:
-    app: placeholder
+    app: knowledge-service
   ports:
-    - port: 80
-      targetPort: 80
+    - port: 8000
+      targetPort: 8000

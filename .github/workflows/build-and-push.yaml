@@ -6,10 +6,10 @@ name: CI build and push
 # This split will allow the image ot be build and tested on PRs without pushing to ECR, which is only done on main.
 on:
   pull_request:
-    paths: ["placeholder/**"]
+    paths: ["app/**"]
   push:
     branches: ["main"]
-    paths: ["placeholder/**"]
+    paths: ["app/**"]
 
 # Startting with no permissions and only scope what is needed for each job.
 permissions: {}
@@ -64,11 +64,17 @@ jobs:
         # This action is used with buildx to build and push docker images.
         uses: docker/build-push-action@f9f3042f7e2789586610d6e8b85c8f03e5195baf # v7.2.0
         with:
-          context: . # Specifying the root directory for the build.
-          file: ./placeholder/Dockerfile # specifying the path to the Dockerfile to use for the build.
+          context: app/ # Specifying the root directory for the build.
+          file: ./app/Dockerfile # specifying the path to the Dockerfile to use for the build.
           push: false
+          # Adding caching so every run doesn't need to install dependencies from scratch
+          # type=gha use github actions own cache backend so this way dependency layers persist between runs.
+          # because the dockerfile already copies the dependencies before the source code.
+          # Any change to the code woll just hit the cache and skip reinstalling the dependencies.
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           tags:  |
-            placeholder:${{ env.TAG }}
+            knowledge-service:${{ env.TAG }}
 
       # main branch: Build and push the real SHA tagged image to ECR on push to main.
       - name: Build and Push Image (main)
@@ -77,8 +83,14 @@ jobs:
         # This action is used with buildx to build and push docker images.
         uses: docker/build-push-action@f9f3042f7e2789586610d6e8b85c8f03e5195baf # v7.2.0
         with:
-          context: . # Specifying the root directory for the build.
-          file: ./placeholder/Dockerfile # specifying the path to the Dockerfile to use for the build.
+          context: app/ # Specifying the root directory for the build.
+          file: ./app/Dockerfile # specifying the path to the Dockerfile to use for the build.
           push: true
+          # Adding caching so every run doesn't need to install dependencies from scratch
+          # type=gha use github actions own cache backend so this way dependency layers persist between runs.
+          # because the dockerfile already copies the dependencies before the source code.
+          # Any change to the code woll just hit the cache and skip reinstalling the dependencies.
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           tags:  |
             ${{ steps.login-ecr.outputs.registry }}/${{ env.AWS_REPO_NAME }}:${{ env.TAG }}

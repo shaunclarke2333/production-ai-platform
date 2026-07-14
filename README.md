@@ -66,3 +66,16 @@ _Will fill in once there is an app to run._
 - 07-11-2026  .github/workflows: Terraform CI restructured into three jobs
               (changes / terraform / terraform-gate). The gate always runs so a
               path filtered required check can never deadlock a PR.
+- 07-13-2026  Started the Knowledge Service, a FastAPI application that will become an
+              incident knowledge base. I Set up the project with uv using a src layout so
+              the package is installed and imported the way production does it, and
+              exposed a single /health endpoint. The health check deliberately touches
+              no dependencies, because a liveness probe that queries the database will
+              report a healthy pod as dead during a transient database blip and
+              Kubernetes will kill it.
+- 07-13-2026  Wrote a multi stage Dockerfile for the service. The build stage installs
+              dependencies from the lockfile before the source is copied, so editing
+              application code does not invalidate the dependency layer and rebuilds
+              stay fast. The runtime stage copies only the built virtual environment and
+              the source, runs as a non root user, and puts the venv on PATH so uvicorn
+              runs directly without uv present in the final image.
