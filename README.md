@@ -55,8 +55,8 @@ _Will fill in once there is an app to run._
 - 07-05-2026  dev: hand-rolled EKS cluster, node group, pod identity agent, EBS CSI driver, AWS-LBC, metrics server
 - 07-05-2026  dev: ArgoCD deployed via Helm
 - 07-10-2026  deploy/: first end-to-end GitOps sync. Placeholder image built by CI,
-              pushed to ECR, deployed to the cluster by ArgoCD from git. The spine
-              is connected: code -> CI -> ECR -> git -> ArgoCD -> EKS.
+              pushed to ECR, deployed to the cluster by ArgoCD from git. The
+              delivery pipeline is connected: code -> CI -> ECR -> git -> ArgoCD -> EKS.
 - 07-10-2026  Docs: directory-level READMEs for vpc, ecr, iam, envs/dev, deploy.
               Architecture diagram updated to present state. Tagged v0.2.0.
 - 07-11-2026  monitoring: kube-prometheus-stack (Prometheus, Grafana, Alertmanager,
@@ -79,3 +79,8 @@ _Will fill in once there is an app to run._
               stay fast. The runtime stage copies only the built virtual environment and
               the source, runs as a non root user, and puts the venv on PATH so uvicorn
               runs directly without uv present in the final image.
+- 07-13-2026  Cut the pipeline over from the nginx placeholder to the real FastAPI
+              service. CI now builds and pushes the Knowledge Service image to ECR,
+              and ArgoCD deploys it to the cluster from Git. The full platform is
+              now carrying a real application: code to GitHub Actions to ECR to Git to
+              ArgoCD to EKS. The placeholder has been removed.
