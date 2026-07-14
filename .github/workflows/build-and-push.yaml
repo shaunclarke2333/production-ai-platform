@@ -64,7 +64,7 @@ jobs:
         # This action is used with buildx to build and push docker images.
         uses: docker/build-push-action@f9f3042f7e2789586610d6e8b85c8f03e5195baf # v7.2.0
         with:
-          context: /app # Specifying the root directory for the build.
+          context: app/ # Specifying the root directory for the build.
           file: ./app/Dockerfile # specifying the path to the Dockerfile to use for the build.
           push: false
           tags:  |
