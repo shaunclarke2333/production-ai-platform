@@ -84,3 +84,9 @@ _Will fill in once there is an app to run._
               and ArgoCD deploys it to the cluster from Git. The full platform is
               now carrying a real application: code to GitHub Actions to ECR to Git to
               ArgoCD to EKS. The placeholder has been removed.
+- 07-14-2026  Added typed application configuration (config.py) using pydantic-settings.
+              Settings load from environment variables with a .env file for local
+              development, and required fields (env_name, database_url) have no defaults,
+              so the application fails immediately at startup if configuration is missing
+              rather than crashing later. Constrained fields use Literal types, so an
+              invalid environment or log level is rejected at load time.
