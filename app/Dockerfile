@@ -1,5 +1,5 @@
 # stage 1, build
-FROM python:3.12-slim-trixie AS builder
+FROM python:3.14-slim-trixie AS builder
 # Installing UV
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 # adding UV_COMPILE_BYTECODE=1 to precompile python files
@@ -18,7 +18,7 @@ COPY src /app/src
 RUN uv sync --frozen --no-dev
 
 # Stage 2, runtime
-FROM python:3.12-slim-trixie
+FROM python:3.14-slim-trixie
 # Creating a dedicated system group and user with a fixed UID/GID
 RUN groupadd -g 10001 knowledgeappgroup && \
     useradd -u 10001 -g knowledgeappgroup -m -s /bin/bash knowledgeappuser

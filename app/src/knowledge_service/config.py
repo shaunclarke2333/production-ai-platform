@@ -32,7 +32,7 @@ class Settings(BaseSettings):
 
     # Specifying the .env file to point to using SettingsConfigDict.
     # The .env file will hold local config files fro each environment (dev, prod, test)
-    model_config = SettingsConfigDict(env_file=".env")
+    model_config: SettingsConfigDict = SettingsConfigDict(env_file=".env")
 
 
 # Creating the settings object that will be imported and used in the project.
