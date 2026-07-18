@@ -34,6 +34,8 @@ def setup_logging():
     # Defining the root logger
     root_logger = logging.getLogger()
     # Explicitly grabbing uvicorn's loggers and redirecting them
+    # This has to be done because uvicorn creates its own logger and handlers
+    # So this way the framewoek logs will also be structured and machine parseable
     for name in ("uvicorn", "uvicorn.access", "uvicorn.error"):
         uvicorn_logger = logging.getLogger(name)  # Get the uvicorn logger
         uvicorn_logger.handlers.clear()  # Drop all of uvicorn's handlers
