@@ -29,6 +29,7 @@ def setup_logging() -> None:
     console_handler: logging.StreamHandler = logging.StreamHandler()
     # Adding the JSON formatter with timestamp and log level to the stream handler.
     # To format log output as json
+
     console_handler.setFormatter(
         JsonFormatter("%(asctime)s %(levelname)s %(name)s %(message)s")
     )
@@ -42,6 +43,7 @@ def setup_logging() -> None:
         uvicorn_logger.handlers.clear()  # Drop each handler
         uvicorn_logger.propagate = (
             True  # Telling each uvicorn handler to let records flow up to my custom logger.
+
         )
     # Clearing any preexisting handlers
     root_logger.handlers.clear()
