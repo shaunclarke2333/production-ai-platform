@@ -24,6 +24,10 @@ from pythonjsonlogger.json import JsonFormatter
 
 
 def setup_logging() -> None:
+    """
+    This function configures the root logger with JSON logging
+    and route uvicorn logs through it.
+    """
 
     # Defining stream handler that will allow us to stream logs to stdout\stderr
     console_handler: logging.StreamHandler = logging.StreamHandler()
