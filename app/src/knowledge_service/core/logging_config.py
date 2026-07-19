@@ -23,24 +23,27 @@ from ..config import settings
 from pythonjsonlogger.json import JsonFormatter
 
 
-def setup_logging():
+def setup_logging() -> None:
 
-    # Defining stream handler that will allow us to stream logs to stdout
-    console_handler = logging.StreamHandler()
-    # Adding the JSON formatter with timestamp and log level to the stream handler
+    # Defining stream handler that will allow us to stream logs to stdout\stderr
+    console_handler: logging.StreamHandler = logging.StreamHandler()
+    # Adding the JSON formatter with timestamp and log level to the stream handler.
+    # To format log output as json
+
     console_handler.setFormatter(
         JsonFormatter("%(asctime)s %(levelname)s %(name)s %(message)s")
     )
     # Defining the root logger
-    root_logger = logging.getLogger()
+    root_logger: logging.Logger = logging.getLogger()
     # Explicitly grabbing uvicorn's loggers and redirecting them
     # This has to be done because uvicorn creates its own logger and handlers
-    # So this way the framewoek logs will also be structured and machine parseable
+    # So this way the uvicorn logs will also be structured and machine parseable
     for name in ("uvicorn", "uvicorn.access", "uvicorn.error"):
         uvicorn_logger = logging.getLogger(name)  # Get the uvicorn logger
-        uvicorn_logger.handlers.clear()  # Drop all of uvicorn's handlers
+        uvicorn_logger.handlers.clear()  # Drop each handler
         uvicorn_logger.propagate = (
-            True  # Telling the uviconr handler to let records flow up.
+            True  # Telling each uvicorn handler to let records flow up to my custom logger.
+
         )
     # Clearing any preexisting handlers
     root_logger.handlers.clear()
