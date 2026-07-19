@@ -98,3 +98,11 @@ _Will fill in once there is an app to run._
               propagate to the root logger, so framework logs are structured too and
               not just the application's own. The log level is read from typed
               configuration rather than hardcoded.
+- 07-17-2026  Added custom domain exceptions (core/exceptions.py). A base
+              KnowledgeServiceError gives every domain error a common parent class and a
+              single type a handler can catch, and IncidentNotFoundError carries the
+              missing incident's id and builds its own message. The exceptions dont need to
+              know anything about HTTP. The service layer raises them in plain domain terms,
+              and a handler at the API boundary (which will be added in step 5, once routes exist)
+              will translate them into HTTP responses. This keeps business logic
+              independent of the web framework.
