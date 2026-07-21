@@ -106,3 +106,14 @@ _Will fill in once there is an app to run._
               and a handler at the API boundary (which will be added in step 5, once routes exist)
               will translate them into HTTP responses. This keeps business logic
               independent of the web framework.
+- 07-19-2026  Built the data layer for the incident knowledge base. Stood up Postgres
+              locally with the pgvector extension (ready for embeddings in Phase B) and
+              confirmed the psycopg driver installs cleanly on Python 3.14. Added a
+              SQLAlchemy engine and session factory (sync, managed by settings.database_url)
+              and split the declarative Base into its own module so models can be imported
+              and tested without initializing the engine, and to the flexibility for
+              Alembic migrations. Defined the Incident model (id, title, description,
+              service, severity, resolution, occurred_at, created_at) with timezone aware
+              timestamps and a server side default for created_at. Created the table and
+              verified a full round trip: inserted an incident and read it back with the
+              database generated id and timestamp populated.

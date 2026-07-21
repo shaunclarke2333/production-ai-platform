@@ -353,4 +353,6 @@ terraform.rc
 foundation.md
 # quick commands i reuse
 quick_commands.md
+# commands used to setup the environment
+environment_setup_flows.md
 # End of https://www.toptal.com/developers/gitignore/api/python,terraform,node
